@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Buscar Ciudad</title>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+</head>
+
+<body>
+  <div class="container" style="padding:50px 250px;">
+    <h1>Busqueda</h1>
+    <div id="header"></div>
+    <form role="form">
+      <div class="form-group">
+        <input type="input" class="form-control input-lg" id="txt-buscar" placeholder="Buscar ciudad">
+      </div>
+    </form>
+    <div id="buscar-datos"></div>
+    <div id="footer"></div>
+  </div>
+</body>
+
+</html>
+<script type="text/javascript">
+  $(document).ready(function () {    
+    $('#txt-buscar').keyup(function () {
+      var buscarC = $(this).val();
+      if (buscarC === '') {
+        $('#buscar-datos').html('');
+        return;
+      }
+
+      var regex = new RegExp(buscarC, "i");
+      var html = '<div class="row">';
+      var cont = 1;
+
+      $.getJSON( "https://raw.githubusercontent.com/lutangar/cities.json/master/cities.json", function( data ) {
+      $.each(data, function (key, val) {
+        /*if ((val.country.search(regex) != -1) || (val.name.search(regex) != -1)) {*/
+          if ((val.name.search(regex) != -1)) {
+          html += '<div class="col-md-12 well">';
+          html += '<div class="col-md-4"><h1><span class="glyphicon glyphicon-globe"></h1></div>';
+          html += '<div class="col-md-8">';
+          html += '<h2><strong>País:</strong> ' + val.country + '</h2>';
+          html += '<p><strong>Nombre:</strong> ' + val.name + '</p>'
+          html += '<p><strong>Latitud:</strong> ' + val.lat + '</p>'
+          html += '<p><strong>Longitud:</strong> ' + val.lng + '</p>'
+          html += '</div>';
+          html += '</div>';
+        }
+      });
+      html += '</div>';
+      $('#buscar-datos').html(html);
+    });
+  });
+    });
+</script>
